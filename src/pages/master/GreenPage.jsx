@@ -18,6 +18,10 @@ export default function GreenPage() {
           </span>
         </div>
 
+        <div className="crown-green-run-blink-wrap" aria-label="Running announcement">
+          <span className="crown-green-run-blink-text">ashtuosh meetha hai dalla hai</span>
+        </div>
+
         <div className="crown-green-desi-scene">
           <img
             className="crown-green-donkey-img"
