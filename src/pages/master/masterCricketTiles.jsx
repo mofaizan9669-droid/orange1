@@ -3,6 +3,7 @@ import {
   BarChart3,
   ClipboardList,
   FileText,
+  Leaf,
   PlayCircle,
   Shield,
   Trophy,
@@ -13,6 +14,13 @@ import {
 
 /** Relative paths under `/master/` (no login userId in URL). */
 const MASTER_CRICKET_TILE_DEFS = [
+  {
+    path: 'green',
+    label: 'Green',
+    hint: 'Green announcement',
+    Icon: Leaf,
+    tone: 'green',
+  },
   {
     path: 'live-bets',
     label: 'Live Bets',

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 280" role="img" aria-label="Gadha Green Ex">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="100%" stop-color="#d9f99d"/>
+    </linearGradient>
+    <linearGradient id="crownG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="280" rx="16" fill="url(#sky)"/>
+  <!-- ground -->
+  <ellipse cx="160" cy="248" rx="130" ry="18" fill="#84cc16" opacity="0.45"/>
+  <!-- donkey body -->
+  <ellipse cx="155" cy="195" rx="72" ry="38" fill="#78716c"/>
+  <ellipse cx="200" cy="188" rx="28" ry="22" fill="#a8a29e"/>
+  <!-- legs -->
+  <rect x="95" y="210" width="14" height="42" rx="6" fill="#57534e"/>
+  <rect x="125" y="212" width="14" height="40" rx="6" fill="#57534e"/>
+  <rect x="175" y="212" width="14" height="40" rx="6" fill="#57534e"/>
+  <rect x="205" y="210" width="14" height="42" rx="6" fill="#57534e"/>
+  <!-- head -->
+  <ellipse cx="78" cy="168" rx="32" ry="28" fill="#a8a29e"/>
+  <path d="M52 158 L38 145 L48 172 Z" fill="#78716c"/>
+  <circle cx="68" cy="162" r="4" fill="#1c1917"/>
+  <!-- tail -->
+  <path d="M228 175 Q250 150 245 130" stroke="#57534e" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- rider (dehati) -->
+  <circle cx="158" cy="118" r="22" fill="#fcd34d"/>
+  <ellipse cx="158" cy="155" rx="26" ry="32" fill="#2563eb"/>
+  <rect x="142" y="98" width="32" height="10" rx="4" fill="#b45309"/>
+  <!-- crown + Green Ex -->
+  <path d="M118 88 L128 72 L138 82 L148 68 L158 82 L168 68 L178 82 L188 72 L198 88 Z" fill="url(#crownG)" stroke="#fef08a" stroke-width="2"/>
+  <rect x="118" y="92" width="80" height="22" rx="6" fill="#c2410c" stroke="#fef08a" stroke-width="2"/>
+  <text x="158" y="108" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="800" fill="#fff">Green Ex</text>
+</svg>
