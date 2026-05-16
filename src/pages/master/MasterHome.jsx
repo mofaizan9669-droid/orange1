@@ -31,6 +31,13 @@ export default function MasterHome() {
         <span>Cricket gaming · Master dashboard</span>
       </div>
 
+      <div className="crown-mx-dash-announce" aria-label="Announcement">
+        <span className="crown-mx-dash-announce-dot" aria-hidden />
+        <span className="crown-mx-dash-announce-inner">
+          Welcome to Crown Ex · Welcome to Crown Ex · Welcome to Crown Ex · Welcome to Crown Ex ·
+        </span>
+      </div>
+
       <div className="crown-mx-summary-row">
         <Link
           to={`${panelBase}/master/super-admins`}
