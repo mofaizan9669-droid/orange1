@@ -5,8 +5,6 @@ import MasterStub from './MasterStub.jsx'
 const LINES = [
   'green ki maa ka bhosda',
   'green ki bau chud jyegi',
-  'green teri aukaat kya hai',
-  'green naam leke sharam kar',
 ]
 
 export default function GreenPage() {
