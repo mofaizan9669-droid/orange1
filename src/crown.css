@@ -1647,34 +1647,6 @@ a.crown-mx-id-row:hover {
   text-transform: uppercase;
 }
 
-.crown-mx-topbar-announce {
-  width: min(100%, 10.5rem);
-  overflow: hidden;
-  pointer-events: none;
-  user-select: none;
-}
-
-.crown-mx-topbar-announce-text {
-  display: inline-block;
-  white-space: nowrap;
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #fdba74;
-  opacity: 0.95;
-  animation: crown-mx-topbar-announce-run 7s linear infinite;
-}
-
-@keyframes crown-mx-topbar-announce-run {
-  0% {
-    transform: translateX(110%);
-  }
-  100% {
-    transform: translateX(-110%);
-  }
-}
-
 a.crown-mx-topbar-brand--home {
   display: inline-flex;
   align-items: center;
