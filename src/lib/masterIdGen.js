@@ -53,8 +53,8 @@ export function createAllocator(seed, initialIds = []) {
   }
 }
 
-/** Panel + lists: 7 SA + 15 Admin + 38 Client = 60 demo logins (mapped tree). */
-export const PANEL_DEMO_COUNTS = { sa: 7, ag: 15, cl: 38 }
+/** Panel + lists: 10 SA + 20 Admin + 50 Client = 80 demo logins (mapped tree). */
+export const PANEL_DEMO_COUNTS = { sa: 10, ag: 20, cl: 50 }
 
 /** Full demo tree IDs (stable seed). */
 export function getLargeDemoIdBlock() {

@@ -1,6 +1,7 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   serverTimestamp,
@@ -10,7 +11,13 @@ import {
 } from 'firebase/firestore'
 import { db, hasFirebaseConfig } from './firebase.js'
 import { setHierarchyCache } from './hierarchyCache.js'
-import { ensurePanelDemoData, readLocalHierarchyPayload } from './hierarchyDemo.js'
+import {
+  DEMO_SCHEMA_VERSION,
+  ensurePanelDemoData,
+  expectedDemoUserCount,
+  isPanelDemoComplete,
+  readLocalHierarchyPayload,
+} from './hierarchyDemo.js'
 import { mirrorHierarchyToLocal } from './hierarchyLocalMirror.js'
 import { readMasterSession } from './masterSession.js'
 
@@ -20,6 +27,11 @@ const TRANSACTIONS = 'transactions'
 let unsubscribeUsers = null
 let started = false
 let lastSyncError = null
+let seedInFlight = false
+
+const DEMO_META_COLLECTION = 'system'
+const DEMO_META_DOC = 'hierarchy'
+const BATCH_WRITE_LIMIT = 400
 
 function stripUndefined(obj) {
   const out = {}
@@ -117,6 +129,39 @@ export function isFirestoreEnabled() {
   return hasFirebaseConfig() && db != null
 }
 
+function countUsers({ sas, agents, clients }) {
+  return (sas?.length || 0) + (agents?.length || 0) + (clients?.length || 0)
+}
+
+async function readDemoMeta() {
+  if (!isFirestoreEnabled()) return null
+  try {
+    const snap = await getDoc(doc(db, DEMO_META_COLLECTION, DEMO_META_DOC))
+    return snap.exists() ? snap.data() : null
+  } catch {
+    return null
+  }
+}
+
+async function writeDemoMeta() {
+  if (!isFirestoreEnabled()) return
+  await setDoc(
+    doc(db, DEMO_META_COLLECTION, DEMO_META_DOC),
+    {
+      schemaVersion: DEMO_SCHEMA_VERSION,
+      expectedUsers: expectedDemoUserCount(),
+      updatedAt: Date.now(),
+    },
+    { merge: true },
+  )
+}
+
+function applyHierarchyToUi({ sas, agents, clients }, source) {
+  setHierarchyCache({ sas, agents, clients, source })
+  mirrorHierarchyToLocal({ sas, agents, clients })
+  notify()
+}
+
 export function startFirestoreSync() {
   if (!isFirestoreEnabled() || started) return
   started = true
@@ -126,9 +171,12 @@ export function startFirestoreSync() {
     (snap) => {
       lastSyncError = null
       let { sas, agents, clients } = splitUsersDocs(snap)
-      if (sas.length === 0 && agents.length === 0 && clients.length === 0) {
+      const remoteTotal = countUsers({ sas, agents, clients })
+      const need = expectedDemoUserCount()
+
+      if (remoteTotal === 0) {
         const local = readLocalHierarchyPayload()
-        if (local.sas.length || local.agents.length || local.clients.length) {
+        if (isPanelDemoComplete(local)) {
           sas = local.sas
           agents = local.agents
           clients = local.clients
@@ -137,12 +185,25 @@ export function startFirestoreSync() {
           sas = demo.sas
           agents = demo.agents
           clients = demo.clients
-          void seedUsersToFirestore(demo).catch((e) => console.error('[Firestore] auto-seed', e))
+        }
+        applyHierarchyToUi({ sas, agents, clients }, 'local')
+        void ensureFirestoreDemoSeed().catch((e) => console.error('[Firestore] auto-seed', e))
+        return
+      }
+
+      if (remoteTotal < need) {
+        const local = ensurePanelDemoData()
+        if (isPanelDemoComplete(local)) {
+          sas = local.sas
+          agents = local.agents
+          clients = local.clients
+          applyHierarchyToUi({ sas, agents, clients }, 'local')
+          void ensureFirestoreDemoSeed().catch((e) => console.error('[Firestore] upsync', e))
+          return
         }
       }
-      setHierarchyCache({ sas, agents, clients, source: 'firestore' })
-      mirrorHierarchyToLocal({ sas, agents, clients })
-      notify()
+
+      applyHierarchyToUi({ sas, agents, clients }, 'firestore')
     },
     (err) => {
       lastSyncError = err?.message || String(err)
@@ -259,21 +320,64 @@ export async function patchUserInFirestore(userId, partial, txMeta = null) {
 export async function seedUsersToFirestore({ sas, agents, clients }) {
   if (!isFirestoreEnabled()) return { ok: true }
   try {
-    const batch = writeBatch(db)
+    const flat = []
     for (const s of sas) {
-      batch.set(doc(db, USERS, s.userId), stripUndefined(rowToFirestoreUser(s, 'super-admin')))
+      flat.push([doc(db, USERS, s.userId), stripUndefined(rowToFirestoreUser(s, 'super-admin'))])
     }
     for (const a of agents) {
-      batch.set(doc(db, USERS, a.userId), stripUndefined(rowToFirestoreUser(a, 'admin')))
+      flat.push([doc(db, USERS, a.userId), stripUndefined(rowToFirestoreUser(a, 'admin'))])
     }
     for (const c of clients) {
-      batch.set(doc(db, USERS, c.userId), stripUndefined(rowToFirestoreUser(c, 'client')))
+      flat.push([doc(db, USERS, c.userId), stripUndefined(rowToFirestoreUser(c, 'client'))])
     }
-    await batch.commit()
+
+    for (let i = 0; i < flat.length; i += BATCH_WRITE_LIMIT) {
+      const batch = writeBatch(db)
+      for (const [ref, data] of flat.slice(i, i + BATCH_WRITE_LIMIT)) {
+        batch.set(ref, data)
+      }
+      await batch.commit()
+    }
+
+    await writeDemoMeta()
     return { ok: true }
   } catch (e) {
     console.error('[Firestore] seedUsers', e)
+    lastSyncError = e?.message || String(e)
     return { ok: false, error: e?.message || 'Firestore seed failed' }
+  }
+}
+
+/** Push full demo tree to Firestore when empty, stale schema, or count < 80. Real-time listener updates UI after. */
+export async function ensureFirestoreDemoSeed() {
+  if (!isFirestoreEnabled()) return { ok: true }
+  if (seedInFlight) return { ok: true, skipped: true }
+  seedInFlight = true
+  try {
+    const demo = ensurePanelDemoData()
+    if (!isPanelDemoComplete(demo)) {
+      return { ok: false, error: 'Local demo incomplete' }
+    }
+
+    const need = expectedDemoUserCount()
+    const snap = await getDocs(collection(db, USERS))
+    const remoteTotal = snap.size
+    const meta = await readDemoMeta()
+    const metaOk = meta?.schemaVersion === DEMO_SCHEMA_VERSION && remoteTotal >= need
+
+    if (metaOk) return { ok: true, skipped: true }
+
+    const seed = await seedUsersToFirestore(demo)
+    if (!seed.ok) return seed
+
+    applyHierarchyToUi(demo, 'firestore')
+    return { ok: true, seeded: true, count: need }
+  } catch (e) {
+    console.error('[Firestore] ensureFirestoreDemoSeed', e)
+    lastSyncError = e?.message || String(e)
+    return { ok: false, error: e?.message || 'Firestore sync failed' }
+  } finally {
+    seedInFlight = false
   }
 }
 

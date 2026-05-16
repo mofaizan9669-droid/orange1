@@ -124,7 +124,9 @@ export function ReportsPage() {
 export function LeaderboardPage() {
   return (
     <MasterStub label="Cricket" title="Leaderboard">
-      <p className="crown-page-note">Top clients / agents by cricket volume — ranking API ke baad.</p>
+      <p className="crown-page-note">
+        Leaderboard screen — aage ka flow yahan add hoga. Abhi placeholder; Master dashboard se is tile par aate ho.
+      </p>
     </MasterStub>
   )
 }

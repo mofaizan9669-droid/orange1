@@ -6,13 +6,12 @@ import { allocateNewIds, getLargeDemoIdBlock } from './masterIdGen.js'
 import { ensurePanelDemoData, readLocalHierarchyPayload } from './hierarchyDemo.js'
 import { getHierarchyCache, isCacheReady, setHierarchyCache } from './hierarchyCache.js'
 import {
-  firestoreHasUsers,
   isFirestoreEnabled,
   logBalanceDelta,
   logLimitUpdate,
   logTransfer,
   patchUserInFirestore,
-  seedUsersToFirestore,
+  ensureFirestoreDemoSeed,
   startFirestoreSync,
   upsertUser,
 } from './firestoreSync.js'
@@ -55,13 +54,9 @@ function maybeSyncFirestoreFromLocal() {
   startFirestoreSync()
   void (async () => {
     try {
-      const has = await firestoreHasUsers()
-      if (!has) {
-        const payload = readLocalHierarchyPayload()
-        const seed = await seedUsersToFirestore(payload)
-        if (seed && !seed.ok) {
-          window.alert(`Firestore seed failed: ${seed.error}\n\nFirestore Rules me read/write allow karein.`)
-        }
+      const seed = await ensureFirestoreDemoSeed()
+      if (seed && !seed.ok) {
+        window.alert(`Firestore seed failed: ${seed.error}\n\nFirebase Console → Firestore Rules me read/write allow karein.`)
       }
     } catch (e) {
       console.error('[Firestore] initial seed failed', e)
@@ -73,7 +68,7 @@ function maybeSyncFirestoreFromLocal() {
 const LS_SA = 'crown-demo-superadmins'
 const LS_AGENTS = 'crown-demo-agents'
 const LS_HIER_VERSION = 'crown-hierarchy-demo-schema'
-const HIER_CURRENT_VERSION = '6'
+const HIER_CURRENT_VERSION = '8'
 
 function maybeReseedHierarchyDemo() {
   if (typeof window === 'undefined') return

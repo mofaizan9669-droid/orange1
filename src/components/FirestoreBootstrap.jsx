@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { ensureHierarchySeeded } from '../lib/hierarchySnapshot.js'
-import { getFirestoreSyncError, isFirestoreEnabled, startFirestoreSync } from '../lib/firestoreSync.js'
+import {
+  ensureFirestoreDemoSeed,
+  getFirestoreSyncError,
+  isFirestoreEnabled,
+  startFirestoreSync,
+} from '../lib/firestoreSync.js'
 import { hasFirebaseConfig } from '../lib/firebase.js'
 
 /** Starts Firestore real-time sync when Firebase env is configured. */
@@ -20,6 +25,7 @@ export default function FirestoreBootstrap() {
       try {
         ensureHierarchySeeded()
         startFirestoreSync()
+        void ensureFirestoreDemoSeed().catch((e) => console.error('[Firestore] bootstrap seed', e))
       } catch (e) {
         console.error('[Firestore] bootstrap', e)
         setSyncErr(e?.message || String(e))

@@ -58,7 +58,7 @@ function lineMapLabel(agentId, saId) {
   return `${agentId} → ${saId}`
 }
 
-/** Build 7 SA, 15 Admin, 38 Client (60 total) with panel login IDs on index 0. */
+/** Build 10 SA, 20 Admin, 50 Client (80 total) with panel login IDs on index 0. */
 export function buildPanelDemoHierarchy() {
   const login = panelLoginIds()
   const block = getPanelDemoIdBlock()
@@ -145,11 +145,27 @@ export function localHierarchyIsEmpty() {
   return sas.length === 0 && agents.length === 0 && clients.length === 0
 }
 
-/** Restore demo if missing; returns payload for Firestore seed. */
+export function expectedDemoUserCount() {
+  return PANEL_DEMO_COUNTS.sa + PANEL_DEMO_COUNTS.ag + PANEL_DEMO_COUNTS.cl
+}
+
+/** Local demo matches full panel tree (10 + 20 + 50). */
+export function isPanelDemoComplete(payload = readLocalHierarchyPayload()) {
+  return (
+    payload.sas.length >= PANEL_DEMO_COUNTS.sa &&
+    payload.agents.length >= PANEL_DEMO_COUNTS.ag &&
+    payload.clients.length >= PANEL_DEMO_COUNTS.cl
+  )
+}
+
+/** Bump when demo size / shape changes — Firestore meta + local reseed. */
+export const DEMO_SCHEMA_VERSION = '8'
+
+/** Restore demo if missing or incomplete; returns payload for Firestore seed. */
 export function ensurePanelDemoData() {
   if (typeof window === 'undefined') return buildPanelDemoHierarchy()
-  if (!localHierarchyIsEmpty()) return readLocalHierarchyPayload()
-  return writePanelDemoToLocal()
+  if (!isPanelDemoComplete()) return writePanelDemoToLocal()
+  return readLocalHierarchyPayload()
 }
 
 export { panelLoginIds, PANEL_DEMO_COUNTS }

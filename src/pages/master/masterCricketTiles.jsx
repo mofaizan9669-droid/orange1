@@ -5,6 +5,7 @@ import {
   FileText,
   PlayCircle,
   Shield,
+  Trophy,
   UserCog,
   Users,
   Wallet,
@@ -74,6 +75,13 @@ const MASTER_CRICKET_TILE_DEFS = [
     hint: 'Client cricket summary',
     Icon: FileText,
     tone: 'red',
+  },
+  {
+    path: 'leaderboard',
+    label: 'Leaderboard',
+    hint: 'Rankings — details coming soon',
+    Icon: Trophy,
+    tone: 'amber',
   },
 ]
 

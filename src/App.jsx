@@ -25,6 +25,7 @@ import {
   MasterSuperAdminsOutlet,
   MasterSuperAdminsPage,
 } from './pages/master/MasterLineViews.jsx'
+import RolePanelsGate from './components/RolePanelsGate.jsx'
 import SuperAdminEntry from './pages/SuperAdminEntry.jsx'
 import AdminEntry from './pages/AdminEntry.jsx'
 import ClientEntry from './pages/ClientEntry.jsx'
@@ -92,16 +93,57 @@ export default function App() {
           <Route path="reports" element={<ReportsPage />} />
           <Route path="leaderboard" element={<LeaderboardPage />} />
           <Route path="old-data" element={<OldDataPage />} />
-          <Route path="client" element={<Navigate to="/client" replace />} />
         </Route>
       </Route>
 
-      <Route path="/superadmin" element={<SuperAdminEntry />} />
-      <Route path="/superadmin/:userId" element={<SuperAdminEntry />} />
-      <Route path="/admin" element={<AdminEntry />} />
-      <Route path="/admin/:userId" element={<AdminEntry />} />
-      <Route path="/client" element={<ClientEntry />} />
-      <Route path="/client/:userId" element={<ClientEntry />} />
+      <Route
+        path="/superadmin"
+        element={
+          <RolePanelsGate>
+            <SuperAdminEntry />
+          </RolePanelsGate>
+        }
+      />
+      <Route
+        path="/superadmin/:userId"
+        element={
+          <RolePanelsGate>
+            <SuperAdminEntry />
+          </RolePanelsGate>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <RolePanelsGate>
+            <AdminEntry />
+          </RolePanelsGate>
+        }
+      />
+      <Route
+        path="/admin/:userId"
+        element={
+          <RolePanelsGate>
+            <AdminEntry />
+          </RolePanelsGate>
+        }
+      />
+      <Route
+        path="/client"
+        element={
+          <RolePanelsGate>
+            <ClientEntry />
+          </RolePanelsGate>
+        }
+      />
+      <Route
+        path="/client/:userId"
+        element={
+          <RolePanelsGate>
+            <ClientEntry />
+          </RolePanelsGate>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
     </>
