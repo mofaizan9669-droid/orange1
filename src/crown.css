@@ -1806,38 +1806,56 @@ a.crown-mx-topbar-brand--home:hover {
   margin: 0 auto;
 }
 
-/* Master dashboard — Welcome flash (replaces old cricket gaming bar) */
-.crown-mx-dash-welcome-flash {
+/* Master dashboard — Welcome running strip + green dot */
+.crown-mx-dash-welcome-run {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin: 0 0 0.85rem;
-  padding: 0.45rem 1rem;
-  text-align: center;
+  padding: 0.45rem 0;
+  overflow: hidden;
+  background: linear-gradient(90deg, #9a3412, #ea580c, #f97316);
+  border-radius: 4px;
+  border: 1px solid rgba(253, 186, 116, 0.4);
+  pointer-events: none;
+  user-select: none;
+}
+
+.crown-mx-dash-welcome-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-left: 0.65rem;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.85);
+  animation: crown-mx-dash-welcome-dot 0.65s step-end infinite;
+}
+
+.crown-mx-dash-welcome-run-inner {
+  display: inline-block;
+  padding-left: 100%;
+  white-space: nowrap;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #fff7ed;
-  background: linear-gradient(90deg, #9a3412, #ea580c, #f97316, #ea580c, #9a3412);
-  background-size: 200% 100%;
-  border-radius: 4px;
-  border: 1px solid rgba(253, 186, 116, 0.4);
-  pointer-events: none;
-  user-select: none;
-  animation: crown-mx-welcome-flash 1.6s ease-in-out infinite;
+  animation: crown-mx-dash-welcome-scroll 12s linear infinite;
 }
 
-@keyframes crown-mx-welcome-flash {
-  0%,
-  100% {
-    opacity: 1;
-    color: #fff7ed;
-    background-position: 0% 50%;
-    box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+@keyframes crown-mx-dash-welcome-scroll {
+  0% {
+    transform: translateX(0);
   }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes crown-mx-dash-welcome-dot {
   50% {
-    opacity: 0.88;
-    color: #fef08a;
-    background-position: 100% 50%;
-    box-shadow: 0 0 14px rgba(250, 204, 21, 0.35);
+    opacity: 0.25;
   }
 }
 

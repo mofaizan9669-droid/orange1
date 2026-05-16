@@ -27,9 +27,10 @@ export default function MasterHome() {
 
   return (
     <div className="crown-mx-dash">
-      <p className="crown-mx-dash-welcome-flash" aria-label="Announcement">
-        Welcome to Crown Ex
-      </p>
+      <div className="crown-mx-dash-welcome-run" aria-label="Announcement">
+        <span className="crown-mx-dash-welcome-dot" aria-hidden />
+        <span className="crown-mx-dash-welcome-run-inner">Welcome to Crown Ex</span>
+      </div>
 
       <div className="crown-mx-summary-row">
         <Link
