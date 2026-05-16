@@ -1629,14 +1629,50 @@ a.crown-mx-id-row:hover {
   cursor: pointer;
 }
 
-.crown-mx-topbar-brand {
+.crown-mx-topbar-center {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+}
+
+.crown-mx-topbar-brand {
   font-weight: 800;
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   color: #fdba74;
   text-transform: uppercase;
+}
+
+.crown-mx-topbar-announce {
+  width: min(100%, 10.5rem);
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.crown-mx-topbar-announce-text {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fdba74;
+  opacity: 0.95;
+  animation: crown-mx-topbar-announce-run 7s linear infinite;
+}
+
+@keyframes crown-mx-topbar-announce-run {
+  0% {
+    transform: translateX(110%);
+  }
+  100% {
+    transform: translateX(-110%);
+  }
 }
 
 a.crown-mx-topbar-brand--home {
@@ -1808,59 +1844,7 @@ a.crown-mx-topbar-brand--home:hover {
   padding: 0.45rem 1rem;
   text-align: right;
   border-radius: 4px;
-  margin-bottom: 0.45rem;
-}
-
-/* Master dashboard — running welcome (not clickable) */
-.crown-mx-dash-announce {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  overflow: hidden;
   margin-bottom: 0.85rem;
-  padding: 0.35rem 0;
-  background: linear-gradient(90deg, #9a3412, #ea580c, #9a3412);
-  border-radius: 4px;
-  border: 1px solid rgba(253, 186, 116, 0.35);
-  pointer-events: none;
-  user-select: none;
-}
-
-.crown-mx-dash-announce-dot {
-  flex-shrink: 0;
-  width: 7px;
-  height: 7px;
-  margin-left: 0.65rem;
-  border-radius: 50%;
-  background: #fef08a;
-  animation: crown-mx-announce-dot 0.7s step-end infinite;
-}
-
-.crown-mx-dash-announce-inner {
-  display: inline-block;
-  padding-left: 100%;
-  white-space: nowrap;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fff7ed;
-  animation: crown-mx-announce-scroll 16s linear infinite;
-}
-
-@keyframes crown-mx-announce-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes crown-mx-announce-dot {
-  50% {
-    opacity: 0.25;
-  }
 }
 
 .crown-mx-summary-row {

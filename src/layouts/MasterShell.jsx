@@ -261,17 +261,22 @@ export default function MasterShell() {
           >
             <Menu size={22} strokeWidth={2} />
           </button>
-          <NavLink
-            to={home}
-            end
-            className="crown-mx-topbar-brand crown-mx-topbar-brand--home"
-            title="Dashboard"
-          >
-            <span className="crown-mx-topbar-brand-mark" aria-hidden>
-              👑
-            </span>
-            <span>CROWN EX</span>
-          </NavLink>
+          <div className="crown-mx-topbar-center">
+            <NavLink
+              to={home}
+              end
+              className="crown-mx-topbar-brand crown-mx-topbar-brand--home"
+              title="Dashboard"
+            >
+              <span className="crown-mx-topbar-brand-mark" aria-hidden>
+                👑
+              </span>
+              <span>CROWN EX</span>
+            </NavLink>
+            <div className="crown-mx-topbar-announce" aria-label="Announcement">
+              <span className="crown-mx-topbar-announce-text">Welcome to Crown Ex</span>
+            </div>
+          </div>
           <UserAccountMenu
             variant="mx"
             userId={displayId}
