@@ -27,9 +27,9 @@ export default function MasterHome() {
 
   return (
     <div className="crown-mx-dash">
-      <div className="crown-mx-welcome-bar">
-        <span>Cricket gaming · Master dashboard</span>
-      </div>
+      <p className="crown-mx-dash-welcome-flash" aria-label="Announcement">
+        Welcome to Crown Ex
+      </p>
 
       <div className="crown-mx-summary-row">
         <Link

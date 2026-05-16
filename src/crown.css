@@ -1834,17 +1834,39 @@ a.crown-mx-topbar-brand--home:hover {
   margin: 0 auto;
 }
 
-.crown-mx-welcome-bar {
-  background: linear-gradient(90deg, #ea580c, #f97316);
-  color: #fff;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+/* Master dashboard — Welcome flash (replaces old cricket gaming bar) */
+.crown-mx-dash-welcome-flash {
+  margin: 0 0 0.85rem;
   padding: 0.45rem 1rem;
-  text-align: right;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff7ed;
+  background: linear-gradient(90deg, #9a3412, #ea580c, #f97316, #ea580c, #9a3412);
+  background-size: 200% 100%;
   border-radius: 4px;
-  margin-bottom: 0.85rem;
+  border: 1px solid rgba(253, 186, 116, 0.4);
+  pointer-events: none;
+  user-select: none;
+  animation: crown-mx-welcome-flash 1.6s ease-in-out infinite;
+}
+
+@keyframes crown-mx-welcome-flash {
+  0%,
+  100% {
+    opacity: 1;
+    color: #fff7ed;
+    background-position: 0% 50%;
+    box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+  }
+  50% {
+    opacity: 0.88;
+    color: #fef08a;
+    background-position: 100% 50%;
+    box-shadow: 0 0 14px rgba(250, 204, 21, 0.35);
+  }
 }
 
 .crown-mx-summary-row {

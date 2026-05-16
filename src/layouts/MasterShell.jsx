@@ -273,9 +273,6 @@ export default function MasterShell() {
               </span>
               <span>CROWN EX</span>
             </NavLink>
-            <div className="crown-mx-topbar-announce" aria-label="Announcement">
-              <span className="crown-mx-topbar-announce-text">Welcome to Crown Ex</span>
-            </div>
           </div>
           <UserAccountMenu
             variant="mx"
