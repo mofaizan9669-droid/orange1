@@ -18,7 +18,6 @@ import {
   SettlementPage,
   SportsPage,
 } from './pages/master/MasterPages.jsx'
-import GreenPage from './pages/master/GreenPage.jsx'
 import { MasterSaAdminProfile, MasterSaClientProfile, MasterSaProfile } from './pages/master/MasterSaHierarchyProfiles.jsx'
 import {
   MasterAdminsPage,
@@ -78,7 +77,6 @@ export default function App() {
               </RequireOwner>
             }
           />
-          <Route path="green" element={<GreenPage />} />
           <Route path="live-bets" element={<LiveBetsPage />} />
           <Route path="live-matches" element={<LiveMatchesPage />} />
           <Route path="master/super-admins" element={<MasterSuperAdminsOutlet />}>
